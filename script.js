@@ -51,3 +51,45 @@ async function chargerCollection() {
 }
 
 chargerCollection();
+document.getElementById("form-stylo").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const messageEl = document.getElementById("message-form");
+  messageEl.textContent = "Ajout en cours...";
+
+  const nouveauStylo = {
+    nom: document.getElementById("nom").value,
+    entreprise: document.getElementById("entreprise").value,
+    categorie: document.getElementById("categorie").value,
+    rarete_circulation: document.getElementById("rarete_circulation").value,
+    rarete_acquisition: document.getElementById("rarete_acquisition").value,
+    source: document.getElementById("source").value,
+    date_acquisition: document.getElementById("date_acquisition").value || null,
+    statut: document.getElementById("statut").value,
+    notes: document.getElementById("notes").value
+  };
+
+  try {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/stylos`, {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(nouveauStylo)
+    });
+
+    if (response.ok) {
+      messageEl.textContent = "Stylo ajouté avec succès !";
+      document.getElementById("form-stylo").reset();
+      chargerCollection(); // recharge la liste pour afficher le nouveau stylo
+    } else {
+      messageEl.textContent = "Erreur lors de l'ajout.";
+      console.error(await response.text());
+    }
+  } catch (error) {
+    messageEl.textContent = "Erreur lors de l'ajout.";
+    console.error(error);
+  }
+});

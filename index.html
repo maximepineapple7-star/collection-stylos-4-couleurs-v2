@@ -13,8 +13,28 @@
   </header>
 
   <main>
+    <section id="formulaire-ajout">
+      <h2>Ajouter un stylo</h2>
+      <form id="form-stylo">
+        <input type="text" id="nom" placeholder="Nom du stylo" required>
+        <input type="text" id="entreprise" placeholder="Entreprise / institution">
+        <input type="text" id="categorie" placeholder="Catégorie (touristique, publicitaire...)">
+        <input type="text" id="rarete_circulation" placeholder="Rareté de circulation">
+        <input type="text" id="rarete_acquisition" placeholder="Rareté d'acquisition">
+        <input type="text" id="source" placeholder="Source (Leboncoin, Boutique du Patrimoine...)">
+        <input type="date" id="date_acquisition">
+        <select id="statut">
+          <option value="possédé">Possédé</option>
+          <option value="en négociation">En négociation</option>
+          <option value="recherché">Recherché</option>
+        </select>
+        <textarea id="notes" placeholder="Notes"></textarea>
+        <button type="submit">Ajouter le stylo</button>
+      </form>
+      <p id="message-form"></p>
+    </section>
+
     <div id="collection">
-      <!-- Les stylos vont s'afficher ici automatiquement plus tard -->
       <p>Chargement de la collection...</p>
     </div>
   </main>
