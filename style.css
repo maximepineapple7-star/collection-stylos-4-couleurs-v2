@@ -299,3 +299,27 @@ background-color: #f5f5f0;
 color: #1a1a2e;
 font-weight: bold;
 }
+.stylo-card {
+cursor: pointer;
+}
+.stylo-card .btn-modifier {
+cursor: pointer;
+}
+#detail-vue-contenu h2 {
+color: #1a1a2e;
+margin-bottom: 16px;
+}
+#detail-vue-contenu img {
+width: 100%;
+max-height: 250px;
+object-fit: cover;
+border-radius: 8px;
+margin-bottom: 16px;
+}
+#detail-vue-contenu p {
+margin-bottom: 10px;
+font-size: 14px;
+}
+#detail-vue-contenu p strong {
+color: #1a1a2e;
+}

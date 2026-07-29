@@ -214,7 +214,11 @@ stylos.forEach(stylo => {
  <span class="badge ${statutClass}">${stylo.statut || ''}</span>
  <button class="btn-modifier">Modifier</button>
  `;
- card.querySelector(".btn-modifier").addEventListener("click", () => ouvrirModal(stylo));
+card.querySelector(".btn-modifier").addEventListener("click", (e) => {
+ e.stopPropagation();
+ ouvrirModal(stylo);
+ });
+ card.addEventListener("click", () => ouvrirDetailVue(stylo));
  container.appendChild(card);
 });
 }
@@ -321,7 +325,34 @@ try {
  console.error(error);
 }
 });
+function ouvrirDetailVue(stylo) {
+const contenu = document.getElementById("detail-vue-contenu");
+contenu.innerHTML = `
+ ${stylo.photo_url ? `<img src="${stylo.photo_url}" alt="${stylo.nom || ''}">` : ''}
+ <h2>${stylo.nom || 'Sans nom'}</h2>
+ <p><strong>Entreprise / institution :</strong> ${stylo.entreprise || '-'}</p>
+ <p><strong>Catégorie :</strong> ${(stylo.categorie || []).join(', ') || '-'}</p>
+ <p><strong>Rareté de circulation :</strong> ${stylo.rarete_circulation || '-'}</p>
+ <p><strong>Rareté d'acquisition :</strong> ${stylo.rarete_acquisition || '-'}</p>
+ <p><strong>Source :</strong> ${stylo.source || '-'}</p>
+ <p><strong>Date d'acquisition :</strong> ${stylo.date_acquisition || '-'}</p>
+ <p><strong>Statut :</strong> ${stylo.statut || '-'}</p>
+ <p><strong>Ville :</strong> ${stylo.lieu_ville || '-'}</p>
+ <p><strong>Lieu :</strong> ${stylo.lieu_nom || '-'}</p>
+ <p><strong>Notes :</strong> ${stylo.notes || '-'}</p>
+`;
+document.getElementById("modal-voir-detail").style.display = "flex";
+}
 
+document.getElementById("fermer-modal-detail-vue").addEventListener("click", () => {
+document.getElementById("modal-voir-detail").style.display = "none";
+});
+
+document.getElementById("modal-voir-detail").addEventListener("click", (e) => {
+if (e.target.id === "modal-voir-detail") {
+ document.getElementById("modal-voir-detail").style.display = "none";
+}
+});
 function ouvrirModal(stylo) {
 document.getElementById("modif-id").value = stylo.id;
 document.getElementById("modif-photo-actuelle").value = stylo.photo_url || "";
