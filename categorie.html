@@ -3,37 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Collection stylos Bic 4 Couleurs - Catégories</title>
+<title>Collection stylos Bic 4 Couleurs - Ma collection</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header>
  <h1>Collection stylos Bic 4 Couleurs</h1>
-<nav class="nav-pages">
+ <nav class="nav-pages">
  <a href="accueil.html">Accueil</a>
  <a href="index.html">Stylos</a>
- <a href="categorie.html" class="active">Catégories</a>
+ <a href="categorie.html">Catégories</a>
  <a href="carte.html">Carte</a>
- <a href="collection.html">Ma collection</a>
+ <a href="collection.html" class="active">Ma collection</a>
  </nav>
 </header>
 <main>
- <div class="filtre-bar">
- <div>
- <label for="filtre-type">Type :</label>
- <select id="filtre-type">
- <option value="">Tous les types</option>
- </select>
+ <h2 class="titre-section">Statistiques</h2>
+ <div class="stats-grid">
+ <div class="stat-bloc">
+ <h3>Répartition par rareté</h3>
+ <div id="graphique-rarete"></div>
  </div>
- <div class="filtre-statuts">
- <button type="button" class="chip-statut" data-statut="possédé">Possédé</button>
- <button type="button" class="chip-statut" data-statut="en négociation">En négociation</button>
- <button type="button" class="chip-statut" data-statut="recherché">Recherché</button>
+ <div class="stat-bloc">
+ <h3>Stylos acquis par année</h3>
+ <div id="graphique-annees"></div>
+ </div>
+ <div class="stat-bloc">
+ <h3>Stylo le plus cher</h3>
+ <div id="stat-plus-cher"></div>
  </div>
  </div>
 
- <div id="collection">
- <p>Chargement de la collection...</p>
+ <h2 class="titre-section">Stylos possédés</h2>
+ <div id="collection-possedes">
+ <p>Chargement...</p>
+ </div>
+
+ <h2 class="titre-section">Stylos en négociation</h2>
+ <div id="collection-negociation">
+ <p>Chargement...</p>
  </div>
 </main>
 
@@ -44,6 +52,6 @@
  </div>
 </div>
 
-<script src="categorie.js"></script>
+<script src="collection.js"></script>
 </body>
 </html>
