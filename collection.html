@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collection stylos Bic 4 Couleurs - Ma collection</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+ <h1>Collection stylos Bic 4 Couleurs</h1>
+ <nav class="nav-pages">
+ <a href="accueil.html">Accueil</a>
+ <a href="index.html">Stylos</a>
+ <a href="categorie.html">Catégories</a>
+ <a href="carte.html">Carte</a>
+ <a href="collection.html" class="active">Ma collection</a>
+ </nav>
+</header>
+<main>
+ <h2 class="titre-section">Stylos possédés</h2>
+ <div id="collection-possedes">
+ <p>Chargement...</p>
+ </div>
+
+ <h2 class="titre-section">Stylos en négociation</h2>
+ <div id="collection-negociation">
+ <p>Chargement...</p>
+ </div>
+</main>
+
+<div id="modal-voir-detail" class="modal-overlay" style="display:none;">
+ <div class="modal-content">
+ <button id="fermer-modal-detail-vue" class="fermer-modal">&times;</button>
+ <div id="detail-vue-contenu"></div>
+ </div>
+</div>
+
+<script src="collection.js"></script>
+</body>
+</html>

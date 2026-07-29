@@ -103,7 +103,29 @@ selectEl.addEventListener("change", () => {
 }
 setupSourceField("source", "source-nouveau");
 setupSourceField("modif-source", "modif-source-nouveau");
-
+function mettreAJourOptionsSource(selectId) {
+const selectEl = document.getElementById(selectId);
+const valeurActuelle = selectEl.value;
+const sourcesFixes = ["", "Site internet (boutique)", "Site internet (revente)", "Boutique physique", "Évènement", "Don", "__nouveau__"];
+const sourcesConnues = new Set();
+styloArray.forEach(s => {
+ if (s.source && !sourcesFixes.includes(s.source)) {
+ sourcesConnues.add(s.source);
+ }
+});
+selectEl.querySelectorAll(".option-source-dynamique").forEach(opt => opt.remove());
+const optionNouveau = selectEl.querySelector('option[value="__nouveau__"]');
+Array.from(sourcesConnues).sort().forEach(source => {
+ const option = document.createElement("option");
+ option.value = source;
+ option.textContent = source;
+ option.className = "option-source-dynamique";
+ selectEl.insertBefore(option, optionNouveau);
+});
+if (Array.from(selectEl.options).some(o => o.value === valeurActuelle)) {
+ selectEl.value = valeurActuelle;
+}
+}
 function getSourceValue(selectId, inputId) {
 const selectEl = document.getElementById(selectId);
 const inputEl = document.getElementById(inputId);
@@ -256,6 +278,9 @@ try {
  const toutesCategories = new Set();
  stylos.forEach(s => (s.categorie || []).forEach(c => toutesCategories.add(c)));
  categoriesConnues = Array.from(toutesCategories).sort();
+
+ mettreAJourOptionsSource("source");
+ mettreAJourOptionsSource("modif-source");
 
  trierEtAfficher();
 } catch (error) {

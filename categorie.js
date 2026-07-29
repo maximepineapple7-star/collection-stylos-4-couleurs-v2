@@ -17,10 +17,28 @@ try {
  }
  );
  styloArray = await response.json();
+ mettreAJourFiltreType();
  appliquerFiltres();
 } catch (error) {
  container.innerHTML = "<p>Erreur de chargement. Vérifie ta connexion à Supabase.</p>";
  console.error(error);
+}
+}
+
+function mettreAJourFiltreType() {
+const selectEl = document.getElementById("filtre-type");
+const valeurActuelle = selectEl.value;
+const toutesCategories = new Set();
+styloArray.forEach(s => (s.categorie || []).forEach(c => toutesCategories.add(c)));
+selectEl.innerHTML = '<option value="">Tous les types</option>';
+Array.from(toutesCategories).sort((a, b) => a.localeCompare(b)).forEach(cat => {
+ const option = document.createElement("option");
+ option.value = cat.toLowerCase();
+ option.textContent = cat;
+ selectEl.appendChild(option);
+});
+if (Array.from(selectEl.options).some(o => o.value === valeurActuelle)) {
+ selectEl.value = valeurActuelle;
 }
 }
 
