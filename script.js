@@ -1,5 +1,5 @@
-const SUPABASE_URL = "https://iriesfaehbjcmirrlazq.supabase.co";
-const SUPABASE_KEY = "sb_publishable_4dMAcdX7_eAfnvqXv8C_6A_fpwnkb_l";
+const SUPABASE_URL = "https://onohxbsakdwfieiipqse.supabase.co";
+const SUPABASE_KEY = "sb_publishable_h-v5IyPAwmL5yuOSHgBqzg_muZPd-yz";
 
 async function chargerCollection() {
 const container = document.getElementById("collection");
