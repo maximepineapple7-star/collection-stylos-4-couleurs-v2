@@ -27,15 +27,15 @@
  <div class="tag-suggestions" id="categorie-suggestions"></div>
  </div>
  <div class="rarete-field">
- <select id="rarete_acquisition">
- <option value="">Rareté d'acquisition</option>
+ <select id="rarete_circulation">
+ <option value="">Rareté de circulation</option>
  <option value="Commun">Commun</option>
  <option value="Peu commun">Peu commun</option>
  <option value="Rare">Rare</option>
  <option value="Très rare">Très rare</option>
  <option value="Exceptionnel">Exceptionnel</option>
  </select>
- <button type="button" class="btn-astero" data-type="acquisition">?</button>
+ <button type="button" class="btn-astero" data-type="circulation">?</button>
  </div>
  <select id="source">
  <option value="">Choisir une source</option>
@@ -47,7 +47,7 @@
  <option value="__nouveau__">+ Ajouter une nouvelle source</option>
  </select>
  <input type="text" id="source-nouveau" placeholder="Nom de la nouvelle source" style="display:none;">
- <input type="date" id="date_acquisition">
+ <input type="number" id="date_acquisition" placeholder="Année d'acquisition" min="1950" max="2100">
  <select id="statut">
  <option value="possédé">Possédé</option>
  <option value="en négociation">En négociation</option>
