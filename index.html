@@ -23,7 +23,16 @@
  </div>
  <input type="text" id="rarete_circulation" placeholder="Rareté de circulation">
  <input type="text" id="rarete_acquisition" placeholder="Rareté d'acquisition">
- <input type="text" id="source" placeholder="Source (Leboncoin, Boutique du Patrimoine...)">
+ <select id="source">
+ <option value="">Choisir une source</option>
+ <option value="Site internet (boutique)">Site internet (boutique)</option>
+ <option value="Site internet (revente)">Site internet (revente)</option>
+ <option value="Boutique physique">Boutique physique</option>
+ <option value="Évènement">Évènement</option>
+ <option value="Don">Don</option>
+ <option value="__nouveau__">+ Ajouter une nouvelle source</option>
+ </select>
+ <input type="text" id="source-nouveau" placeholder="Nom de la nouvelle source" style="display:none;">
  <input type="date" id="date_acquisition">
  <select id="statut">
  <option value="possédé">Possédé</option>
@@ -67,7 +76,16 @@
  <input type="text" id="modif-rarete_acquisition">
  </label>
  <label>Source
- <input type="text" id="modif-source">
+ <select id="modif-source">
+ <option value="">Choisir une source</option>
+ <option value="Site internet (boutique)">Site internet (boutique)</option>
+ <option value="Site internet (revente)">Site internet (revente)</option>
+ <option value="Boutique physique">Boutique physique</option>
+ <option value="Évènement">Évènement</option>
+ <option value="Don">Don</option>
+ <option value="__nouveau__">+ Ajouter une nouvelle source</option>
+ </select>
+ <input type="text" id="modif-source-nouveau" placeholder="Nom de la nouvelle source" style="display:none; margin-top: 6px;">
  </label>
  <label>Date d'acquisition
  <input type="date" id="modif-date_acquisition">

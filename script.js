@@ -87,6 +87,46 @@ return {
 const tagPickerAjout = createTagPicker("categorie");
 const tagPickerModif = createTagPicker("modif-categorie");
 
+function setupSourceField(selectId, inputId) {
+const selectEl = document.getElementById(selectId);
+const inputEl = document.getElementById(inputId);
+selectEl.addEventListener("change", () => {
+ if (selectEl.value === "__nouveau__") {
+ inputEl.style.display = "block";
+ inputEl.focus();
+ } else {
+ inputEl.style.display = "none";
+ inputEl.value = "";
+ }
+});
+}
+setupSourceField("source", "source-nouveau");
+setupSourceField("modif-source", "modif-source-nouveau");
+
+function getSourceValue(selectId, inputId) {
+const selectEl = document.getElementById(selectId);
+const inputEl = document.getElementById(inputId);
+if (selectEl.value === "__nouveau__") {
+ return inputEl.value.trim();
+}
+return selectEl.value;
+}
+
+function setSourceValue(selectId, inputId, valeur) {
+const selectEl = document.getElementById(selectId);
+const inputEl = document.getElementById(inputId);
+const optionsConnues = Array.from(selectEl.options).map(o => o.value);
+if (valeur && !optionsConnues.includes(valeur)) {
+ selectEl.value = "__nouveau__";
+ inputEl.style.display = "block";
+ inputEl.value = valeur;
+} else {
+ selectEl.value = valeur || "";
+ inputEl.style.display = "none";
+ inputEl.value = "";
+}
+}
+
 async function chargerCollection() {
 const container = document.getElementById("collection");
 try {
@@ -167,7 +207,7 @@ try {
  categorie: tagPickerAjout.getTags(),
  rarete_circulation: document.getElementById("rarete_circulation").value,
  rarete_acquisition: document.getElementById("rarete_acquisition").value,
- source: document.getElementById("source").value,
+ source: getSourceValue("source", "source-nouveau"),
  date_acquisition: document.getElementById("date_acquisition").value || null,
  statut: document.getElementById("statut").value,
  photo_url: photoUrl,
@@ -184,8 +224,9 @@ try {
  });
  if (response.ok) {
  messageEl.textContent = "Stylo ajouté avec succès !";
- document.getElementById("form-stylo").reset();
+document.getElementById("form-stylo").reset();
  tagPickerAjout.setTags([]);
+ document.getElementById("source-nouveau").style.display = "none";
  chargerCollection();
  } else {
  messageEl.textContent = "Erreur lors de l'ajout.";
@@ -205,7 +246,7 @@ document.getElementById("modif-entreprise").value = stylo.entreprise || "";
 tagPickerModif.setTags(stylo.categorie || []);
 document.getElementById("modif-rarete_circulation").value = stylo.rarete_circulation || "";
 document.getElementById("modif-rarete_acquisition").value = stylo.rarete_acquisition || "";
-document.getElementById("modif-source").value = stylo.source || "";
+setSourceValue("modif-source", "modif-source-nouveau", stylo.source || "");
 document.getElementById("modif-date_acquisition").value = stylo.date_acquisition || "";
 document.getElementById("modif-statut").value = stylo.statut || "possédé";
 document.getElementById("modif-photo").value = "";
@@ -259,7 +300,7 @@ try {
  categorie: tagPickerModif.getTags(),
  rarete_circulation: document.getElementById("modif-rarete_circulation").value,
  rarete_acquisition: document.getElementById("modif-rarete_acquisition").value,
- source: document.getElementById("modif-source").value,
+source: getSourceValue("modif-source", "modif-source-nouveau"),
  date_acquisition: document.getElementById("modif-date_acquisition").value || null,
  statut: document.getElementById("modif-statut").value,
  photo_url: photoUrl,
