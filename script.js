@@ -509,7 +509,18 @@ try {
  });
  if (response.ok) {
  messageEl.textContent = "Stylo supprimé !";
- function csvEchapper(valeur) {
+ chargerCollection();
+ setTimeout(fermerModal, 500);
+ } else {
+ messageEl.textContent = "Erreur lors de la suppression.";
+ console.error(await response.text());
+ }
+} catch (error) {
+ messageEl.textContent = "Erreur lors de la suppression.";
+ console.error(error);
+}
+});
+function csvEchapper(valeur) {
 if (valeur === null || valeur === undefined) return "";
 const texte = String(valeur).replace(/"/g, '""');
 return `"${texte}"`;
@@ -549,14 +560,3 @@ URL.revokeObjectURL(url);
 }
 
 document.getElementById("btn-export-csv").addEventListener("click", exporterCSV);
- chargerCollection();
- setTimeout(fermerModal, 500);
- } else {
- messageEl.textContent = "Erreur lors de la suppression.";
- console.error(await response.text());
- }
-} catch (error) {
- messageEl.textContent = "Erreur lors de la suppression.";
- console.error(error);
-}
-});
