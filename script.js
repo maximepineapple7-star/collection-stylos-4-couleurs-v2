@@ -2,6 +2,7 @@ const SUPABASE_URL = "https://onohxbsakdwfieiipqse.supabase.co";
 const SUPABASE_KEY = "sb_publishable_h-v5IyPAwmL5yuOSHgBqzg_muZPd-yz";
 
 let categoriesConnues = [];
+let styloArray = [];
 
 function createTagPicker(prefix) {
 const tagsContainer = document.getElementById(`${prefix}-tags`);
@@ -127,30 +128,79 @@ if (valeur && !optionsConnues.includes(valeur)) {
 }
 }
 
-async function chargerCollection() {
+const infosRarete = {
+circulation: {
+ titre: "Échelle de rareté de circulation",
+ html: `<table>
+ <tr><th>Statut</th><th>Nombre d'exemplaires connus</th></tr>
+ <tr><td>Commun</td><td>&gt; 5000</td></tr>
+ <tr><td>Peu commun</td><td>1000 - 5000</td></tr>
+ <tr><td>Rare</td><td>300 - 1000</td></tr>
+ <tr><td>Très rare</td><td>50 - 300</td></tr>
+ <tr><td>Exceptionnel</td><td>&le; 50</td></tr>
+ </table>`
+},
+acquisition: {
+ titre: "Échelle de rareté d'acquisition",
+ html: `<table>
+ <tr><th>Statut</th><th>Fréquence sur le marché</th><th>Difficulté</th></tr>
+ <tr><td>Commun</td><td>Plusieurs fois/semaine</td><td>Très facile</td></tr>
+ <tr><td>Peu commun</td><td>Plusieurs fois/mois</td><td>Facile, un peu de veille</td></tr>
+ <tr><td>Rare</td><td>Quelques fois/trimestre</td><td>Recherche régulière, concurrence modérée</td></tr>
+ <tr><td>Très rare</td><td>1 à quelques fois/an</td><td>Recherche longue, réseau spécialisé</td></tr>
+ <tr><td>Exceptionnel</td><td>Tous les 2-3 ans ou moins</td><td>Accès très difficile, cercle restreint</td></tr>
+ </table>`
+}
+};
+
+function ouvrirModalRarete(type) {
+document.getElementById("rarete-info-titre").textContent = infosRarete[type].titre;
+document.getElementById("rarete-info-contenu").innerHTML = infosRarete[type].html;
+document.getElementById("modal-rarete-info").style.display = "flex";
+}
+
+document.querySelectorAll(".btn-astero").forEach(btn => {
+btn.addEventListener("click", () => ouvrirModalRarete(btn.dataset.type));
+});
+
+document.getElementById("fermer-modal-rarete").addEventListener("click", () => {
+document.getElementById("modal-rarete-info").style.display = "none";
+});
+
+document.getElementById("modal-rarete-info").addEventListener("click", (e) => {
+if (e.target.id === "modal-rarete-info") {
+ document.getElementById("modal-rarete-info").style.display = "none";
+}
+});
+
+function valeurRarete(txt) {
+const echelle = { "Commun": 1, "Peu commun": 2, "Rare": 3, "Très rare": 4, "Exceptionnel": 5 };
+return echelle[txt] || 0;
+}
+
+function trierStylos(stylos, critere) {
+const copie = [...stylos];
+if (critere === "acquisition") {
+ copie.sort((a, b) => valeurRarete(b.rarete_acquisition) - valeurRarete(a.rarete_acquisition));
+} else if (critere === "circulation") {
+ copie.sort((a, b) => valeurRarete(b.rarete_circulation) - valeurRarete(a.rarete_circulation));
+} else if (critere === "moyenne") {
+ const moyenne = (s) => (valeurRarete(s.rarete_acquisition) + valeurRarete(s.rarete_circulation)) / 2;
+ copie.sort((a, b) => moyenne(b) - moyenne(a));
+} else {
+ copie.sort((a, b) => (a.nom || "").localeCompare(b.nom || ""));
+}
+return copie;
+}
+
+function afficherStylos(stylos) {
 const container = document.getElementById("collection");
-try {
- const response = await fetch(
- `${SUPABASE_URL}/rest/v1/stylos?select=*`,
- {
- headers: {
- "apikey": SUPABASE_KEY,
- "Authorization": `Bearer ${SUPABASE_KEY}`
- }
- }
- );
- const stylos = await response.json();
-
- const toutesCategories = new Set();
- stylos.forEach(s => (s.categorie || []).forEach(c => toutesCategories.add(c)));
- categoriesConnues = Array.from(toutesCategories).sort();
-
- if (stylos.length === 0) {
+if (stylos.length === 0) {
  container.innerHTML = "<p>Aucun stylo enregistré pour le moment.</p>";
  return;
- }
- container.innerHTML = "";
- stylos.forEach(stylo => {
+}
+container.innerHTML = "";
+stylos.forEach(stylo => {
  const card = document.createElement("div");
  card.className = "stylo-card";
  const statutClass = stylo.statut === "possédé" ? "possede"
@@ -166,7 +216,37 @@ try {
  `;
  card.querySelector(".btn-modifier").addEventListener("click", () => ouvrirModal(stylo));
  container.appendChild(card);
- });
+});
+}
+
+function trierEtAfficher() {
+const critere = document.getElementById("tri-select").value;
+const trie = trierStylos(styloArray, critere);
+afficherStylos(trie);
+}
+
+document.getElementById("tri-select").addEventListener("change", trierEtAfficher);
+
+async function chargerCollection() {
+const container = document.getElementById("collection");
+try {
+ const response = await fetch(
+ `${SUPABASE_URL}/rest/v1/stylos?select=*`,
+ {
+ headers: {
+ "apikey": SUPABASE_KEY,
+ "Authorization": `Bearer ${SUPABASE_KEY}`
+ }
+ }
+ );
+ const stylos = await response.json();
+ styloArray = stylos;
+
+ const toutesCategories = new Set();
+ stylos.forEach(s => (s.categorie || []).forEach(c => toutesCategories.add(c)));
+ categoriesConnues = Array.from(toutesCategories).sort();
+
+ trierEtAfficher();
 } catch (error) {
  container.innerHTML = "<p>Erreur de chargement. Vérifie ta connexion à Supabase.</p>";
  console.error(error);
@@ -210,6 +290,10 @@ try {
  source: getSourceValue("source", "source-nouveau"),
  date_acquisition: document.getElementById("date_acquisition").value || null,
  statut: document.getElementById("statut").value,
+ lieu_ville: document.getElementById("lieu_ville").value,
+ lieu_nom: document.getElementById("lieu_nom").value,
+ lieu_lat: document.getElementById("lieu_lat").value ? parseFloat(document.getElementById("lieu_lat").value) : null,
+ lieu_lng: document.getElementById("lieu_lng").value ? parseFloat(document.getElementById("lieu_lng").value) : null,
  photo_url: photoUrl,
  notes: document.getElementById("notes").value
  };
@@ -224,7 +308,7 @@ try {
  });
  if (response.ok) {
  messageEl.textContent = "Stylo ajouté avec succès !";
-document.getElementById("form-stylo").reset();
+ document.getElementById("form-stylo").reset();
  tagPickerAjout.setTags([]);
  document.getElementById("source-nouveau").style.display = "none";
  chargerCollection();
@@ -249,6 +333,10 @@ document.getElementById("modif-rarete_acquisition").value = stylo.rarete_acquisi
 setSourceValue("modif-source", "modif-source-nouveau", stylo.source || "");
 document.getElementById("modif-date_acquisition").value = stylo.date_acquisition || "";
 document.getElementById("modif-statut").value = stylo.statut || "possédé";
+document.getElementById("modif-lieu_ville").value = stylo.lieu_ville || "";
+document.getElementById("modif-lieu_nom").value = stylo.lieu_nom || "";
+document.getElementById("modif-lieu_lat").value = stylo.lieu_lat ?? "";
+document.getElementById("modif-lieu_lng").value = stylo.lieu_lng ?? "";
 document.getElementById("modif-photo").value = "";
 document.getElementById("modif-notes").value = stylo.notes || "";
 document.getElementById("message-modif").textContent = "";
@@ -300,9 +388,13 @@ try {
  categorie: tagPickerModif.getTags(),
  rarete_circulation: document.getElementById("modif-rarete_circulation").value,
  rarete_acquisition: document.getElementById("modif-rarete_acquisition").value,
-source: getSourceValue("modif-source", "modif-source-nouveau"),
+ source: getSourceValue("modif-source", "modif-source-nouveau"),
  date_acquisition: document.getElementById("modif-date_acquisition").value || null,
  statut: document.getElementById("modif-statut").value,
+ lieu_ville: document.getElementById("modif-lieu_ville").value,
+ lieu_nom: document.getElementById("modif-lieu_nom").value,
+ lieu_lat: document.getElementById("modif-lieu_lat").value ? parseFloat(document.getElementById("modif-lieu_lat").value) : null,
+ lieu_lng: document.getElementById("modif-lieu_lng").value ? parseFloat(document.getElementById("modif-lieu_lng").value) : null,
  photo_url: photoUrl,
  notes: document.getElementById("modif-notes").value
  };
