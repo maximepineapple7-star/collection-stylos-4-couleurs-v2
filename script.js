@@ -274,11 +274,27 @@ const trie = trierStylos(resultat, critere);
 afficherStylos(trie);
 }
 
-if (response.ok) {
- messageEl.textContent = "Stylo supprimé !";
+async function toggleFavori(stylo, event) {
+event.stopPropagation();
+const nouveauFavori = !stylo.favori;
+try {
+ const response = await fetch(`${SUPABASE_URL}/rest/v1/stylos?id=eq.${stylo.id}`, {
+ method: "PATCH",
+ headers: {
+ "apikey": SUPABASE_KEY,
+ "Authorization": `Bearer ${SUPABASE_KEY}`,
+ "Content-Type": "application/json",
+ "Prefer": "return=minimal"
+ },
+ body: JSON.stringify({ favori: nouveauFavori })
+ });
+ if (response.ok) {
  chargerCollection();
- setTimeout(fermerModal, 500);
- } else {
+ }
+} catch (error) {
+ console.error(error);
+}
+}
 
 document.getElementById("tri-select").addEventListener("change", trierEtAfficher);
 document.getElementById("recherche-nom").addEventListener("input", trierEtAfficher);
@@ -524,29 +540,8 @@ try {
  "Prefer": "return=minimal"
  }
  });
- if (response.ok) {
+if (response.ok) {
  messageEl.textContent = "Stylo supprimé !";
- async function toggleFavori(stylo, event) {
-event.stopPropagation();
-const nouveauFavori = !stylo.favori;
-try {
- const response = await fetch(`${SUPABASE_URL}/rest/v1/stylos?id=eq.${stylo.id}`, {
- method: "PATCH",
- headers: {
- "apikey": SUPABASE_KEY,
- "Authorization": `Bearer ${SUPABASE_KEY}`,
- "Content-Type": "application/json",
- "Prefer": "return=minimal"
- },
- body: JSON.stringify({ favori: nouveauFavori })
- });
- if (response.ok) {
- chargerCollection();
- }
-} catch (error) {
- console.error(error);
-}
-}
  chargerCollection();
  setTimeout(fermerModal, 500);
  } else {
