@@ -1,44 +1,88 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ma collection de stylos Bic 4 Couleurs</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ma collection de stylos Bic 4 Couleurs</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <header>
-    <h1>Ma collection de stylos Bic 4 Couleurs</h1>
-  </header>
-
-  <main>
-    <section id="formulaire-ajout">
-      <h2>Ajouter un stylo</h2>
-      <form id="form-stylo">
-        <input type="text" id="nom" placeholder="Nom du stylo" required>
-        <input type="text" id="entreprise" placeholder="Entreprise / institution">
-        <input type="text" id="categorie" placeholder="Catégorie (touristique, publicitaire...)">
-        <input type="text" id="rarete_circulation" placeholder="Rareté de circulation">
-        <input type="text" id="rarete_acquisition" placeholder="Rareté d'acquisition">
-        <input type="text" id="source" placeholder="Source (Leboncoin, Boutique du Patrimoine...)">
-        <input type="date" id="date_acquisition">
-        <select id="statut">
-          <option value="possédé">Possédé</option>
-          <option value="en négociation">En négociation</option>
-          <option value="recherché">Recherché</option>
-        </select>
-        <textarea id="notes" placeholder="Notes"></textarea>
-        <button type="submit">Ajouter le stylo</button>
-      </form>
-      <p id="message-form"></p>
-    </section>
-
-    <div id="collection">
-      <p>Chargement de la collection...</p>
-    </div>
-  </main>
-
-  <script src="script.js"></script>
+<header>
+ <h1>Ma collection de stylos Bic 4 Couleurs</h1>
+</header>
+<main>
+ <section id="formulaire-ajout">
+ <h2>Ajouter un stylo</h2>
+ <form id="form-stylo">
+ <input type="text" id="nom" placeholder="Nom du stylo" required>
+ <input type="text" id="entreprise" placeholder="Entreprise / institution">
+ <input type="text" id="categorie" placeholder="Catégorie (touristique, publicitaire...)">
+ <input type="text" id="rarete_circulation" placeholder="Rareté de circulation">
+ <input type="text" id="rarete_acquisition" placeholder="Rareté d'acquisition">
+ <input type="text" id="source" placeholder="Source (Leboncoin, Boutique du Patrimoine...)">
+ <input type="date" id="date_acquisition">
+ <select id="statut">
+ <option value="possédé">Possédé</option>
+ <option value="en négociation">En négociation</option>
+ <option value="recherché">Recherché</option>
+ </select>
+ <input type="file" id="photo" accept="image/*">
+ <textarea id="notes" placeholder="Notes"></textarea>
+ <button type="submit">Ajouter le stylo</button>
+ </form>
+ <p id="message-form"></p>
+ </section>
+ <div id="collection">
+ <p>Chargement de la collection...</p>
+ </div>
+</main>
+<div id="modal-detail" class="modal-overlay" style="display:none;">
+ <div class="modal-content">
+ <button id="fermer-modal" class="fermer-modal">&times;</button>
+ <h2>Modifier le stylo</h2>
+ <form id="form-modif-stylo">
+ <input type="hidden" id="modif-id">
+ <input type="hidden" id="modif-photo-actuelle">
+ <label>Nom
+ <input type="text" id="modif-nom" required>
+ </label>
+ <label>Entreprise / institution
+ <input type="text" id="modif-entreprise">
+ </label>
+ <label>Catégorie
+ <input type="text" id="modif-categorie">
+ </label>
+ <label>Rareté de circulation
+ <input type="text" id="modif-rarete_circulation">
+ </label>
+ <label>Rareté d'acquisition
+ <input type="text" id="modif-rarete_acquisition">
+ </label>
+ <label>Source
+ <input type="text" id="modif-source">
+ </label>
+ <label>Date d'acquisition
+ <input type="date" id="modif-date_acquisition">
+ </label>
+ <label>Statut
+ <select id="modif-statut">
+ <option value="possédé">Possédé</option>
+ <option value="en négociation">En négociation</option>
+ <option value="recherché">Recherché</option>
+ </select>
+ </label>
+ <label>Photo (laisser vide pour garder la photo actuelle)
+ <input type="file" id="modif-photo" accept="image/*">
+ </label>
+ <label>Notes
+ <textarea id="modif-notes"></textarea>
+ </label>
+ <button type="submit">Enregistrer les modifications</button>
+ <button type="button" id="btn-supprimer-stylo" class="btn-supprimer">Supprimer le stylo</button>
+ </form>
+ <p id="message-modif"></p>
+ </div>
+</div>
+<script src="script.js"></script>
 </body>
 </html>

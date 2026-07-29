@@ -1,90 +1,247 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+margin: 0;
+padding: 0;
+box-sizing: border-box;
 }
-
 body {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background-color: #f5f5f0;
-  color: #2c2c2c;
+font-family: 'Segoe UI', Arial, sans-serif;
+background-color: #f5f5f0;
+color: #2c2c2c;
 }
-
 header {
-  background-color: #1a1a2e;
-  color: white;
-  padding: 30px 20px;
-  text-align: center;
+background-color: #1a1a2e;
+color: white;
+padding: 30px 20px;
+text-align: center;
 }
-
 header h1 {
-  font-size: 28px;
+font-size: 28px;
 }
-
 main {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 30px 20px;
+max-width: 1100px;
+margin: 0 auto;
+padding: 30px 20px;
 }
-
 #collection {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+gap: 20px;
 }
-
 .stylo-card {
-  background: white;
-  border-radius: 10px;
-  padding: 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease;
+background: white;
+border-radius: 10px;
+padding: 16px;
+padding-bottom: 48px;
+box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+transition: transform 0.2s ease;
+position: relative;
 }
-
 .stylo-card:hover {
-  transform: translateY(-4px);
+transform: translateY(-4px);
 }
-
 .stylo-card img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 6px;
-  margin-bottom: 10px;
-  background-color: #eee;
+width: 100%;
+height: 160px;
+object-fit: cover;
+border-radius: 6px;
+margin-bottom: 10px;
+background-color: #eee;
 }
-
 .stylo-card h3 {
-  font-size: 16px;
-  margin-bottom: 6px;
+font-size: 16px;
+margin-bottom: 6px;
 }
-
 .stylo-card p {
-  font-size: 13px;
-  color: #666;
-  margin-bottom: 4px;
+font-size: 13px;
+color: #666;
+margin-bottom: 4px;
 }
-
 .badge {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: bold;
-  margin-top: 6px;
+display: inline-block;
+padding: 2px 8px;
+border-radius: 12px;
+font-size: 11px;
+font-weight: bold;
+margin-top: 6px;
 }
-
 .badge.possede {
-  background-color: #d4edda;
-  color: #155724;
+background-color: #d4edda;
+color: #155724;
 }
-
 .badge.negociation {
-  background-color: #fff3cd;
-  color: #856404;
+background-color: #fff3cd;
+color: #856404;
 }
-
 .badge.recherche {
-  background-color: #f8d7da;
-  color: #721c24;
+background-color: #f8d7da;
+color: #721c24;
+}
+#formulaire-ajout {
+background: white;
+border-radius: 10px;
+padding: 24px;
+margin-bottom: 40px;
+box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+#formulaire-ajout h2 {
+margin-bottom: 16px;
+font-size: 20px;
+color: #1a1a2e;
+}
+#form-stylo {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 12px;
+}
+#form-stylo input,
+#form-stylo select,
+#form-stylo textarea {
+padding: 10px 12px;
+border: 1px solid #ddd;
+border-radius: 6px;
+font-size: 14px;
+font-family: inherit;
+width: 100%;
+}
+#form-stylo textarea {
+resize: vertical;
+min-height: 42px;
+grid-column: span 2;
+}
+#form-stylo input:focus,
+#form-stylo select:focus,
+#form-stylo textarea:focus {
+outline: none;
+border-color: #1a1a2e;
+}
+#form-stylo button {
+grid-column: 1 / -1;
+background-color: #1a1a2e;
+color: white;
+border: none;
+padding: 12px 20px;
+border-radius: 6px;
+font-size: 15px;
+font-weight: bold;
+cursor: pointer;
+transition: background-color 0.2s ease;
+}
+#form-stylo button:hover {
+background-color: #2c2c54;
+}
+#message-form {
+margin-top: 12px;
+font-size: 14px;
+font-weight: bold;
+color: #155724;
+}
+.modal-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0,0,0,0.5);
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 1000;
+}
+.modal-content {
+background: white;
+border-radius: 10px;
+padding: 30px;
+width: 90%;
+max-width: 500px;
+max-height: 85vh;
+overflow-y: auto;
+position: relative;
+}
+.fermer-modal {
+position: absolute;
+top: 16px;
+right: 16px;
+background: none;
+border: none;
+font-size: 24px;
+cursor: pointer;
+color: #666;
+line-height: 1;
+}
+.fermer-modal:hover {
+color: #1a1a2e;
+}
+.modal-content h2 {
+margin-bottom: 20px;
+color: #1a1a2e;
+}
+#form-modif-stylo {
+display: flex;
+flex-direction: column;
+gap: 14px;
+}
+#form-modif-stylo label {
+display: flex;
+flex-direction: column;
+font-size: 13px;
+font-weight: bold;
+color: #444;
+gap: 4px;
+}
+#form-modif-stylo input,
+#form-modif-stylo select,
+#form-modif-stylo textarea {
+padding: 10px 12px;
+border: 1px solid #ddd;
+border-radius: 6px;
+font-size: 14px;
+font-family: inherit;
+font-weight: normal;
+}
+#form-modif-stylo textarea {
+resize: vertical;
+min-height: 60px;
+}
+#form-modif-stylo button {
+background-color: #1a1a2e;
+color: white;
+border: none;
+padding: 12px 20px;
+border-radius: 6px;
+font-size: 15px;
+font-weight: bold;
+cursor: pointer;
+margin-top: 8px;
+}
+#form-modif-stylo button:hover {
+background-color: #2c2c54;
+}
+.btn-modifier {
+position: absolute;
+bottom: 12px;
+right: 12px;
+background-color: #1a1a2e;
+color: white;
+border: none;
+padding: 6px 12px;
+border-radius: 6px;
+font-size: 12px;
+cursor: pointer;
+}
+.btn-modifier:hover {
+background-color: #2c2c54;
+}
+.btn-supprimer {
+background-color: #b33939;
+color: white;
+border: none;
+padding: 12px 20px;
+border-radius: 6px;
+font-size: 15px;
+font-weight: bold;
+cursor: pointer;
+margin-top: 8px;
+}
+.btn-supprimer:hover {
+background-color: #8a2a2a;
 }
