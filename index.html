@@ -16,7 +16,11 @@
  <form id="form-stylo">
  <input type="text" id="nom" placeholder="Nom du stylo" required>
  <input type="text" id="entreprise" placeholder="Entreprise / institution">
- <input type="text" id="categorie" placeholder="Catégorie (touristique, publicitaire...)">
+ <div class="tag-picker" id="categorie-picker">
+ <div class="tags-selectionnees" id="categorie-tags"></div>
+ <input type="text" id="categorie-input" placeholder="Ajouter une catégorie...">
+ <div class="tag-suggestions" id="categorie-suggestions"></div>
+ </div>
  <input type="text" id="rarete_circulation" placeholder="Rareté de circulation">
  <input type="text" id="rarete_acquisition" placeholder="Rareté d'acquisition">
  <input type="text" id="source" placeholder="Source (Leboncoin, Boutique du Patrimoine...)">
@@ -50,7 +54,11 @@
  <input type="text" id="modif-entreprise">
  </label>
  <label>Catégorie
- <input type="text" id="modif-categorie">
+ <div class="tag-picker" id="modif-categorie-picker">
+ <div class="tags-selectionnees" id="modif-categorie-tags"></div>
+ <input type="text" id="modif-categorie-input" placeholder="Ajouter une catégorie...">
+ <div class="tag-suggestions" id="modif-categorie-suggestions"></div>
+ </div>
  </label>
  <label>Rareté de circulation
  <input type="text" id="modif-rarete_circulation">

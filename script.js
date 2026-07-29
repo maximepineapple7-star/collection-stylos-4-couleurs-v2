@@ -1,6 +1,92 @@
 const SUPABASE_URL = "https://onohxbsakdwfieiipqse.supabase.co";
 const SUPABASE_KEY = "sb_publishable_h-v5IyPAwmL5yuOSHgBqzg_muZPd-yz";
 
+let categoriesConnues = [];
+
+function createTagPicker(prefix) {
+const tagsContainer = document.getElementById(`${prefix}-tags`);
+const inputEl = document.getElementById(`${prefix}-input`);
+const suggestionsEl = document.getElementById(`${prefix}-suggestions`);
+let tags = [];
+
+function render() {
+ tagsContainer.innerHTML = tags.map(t => `<span class="tag-chip">${t}<button type="button" data-tag="${t}">&times;</button></span>`).join('');
+ tagsContainer.querySelectorAll('button').forEach(btn => {
+ btn.addEventListener('click', () => {
+ tags = tags.filter(t => t !== btn.dataset.tag);
+ render();
+ });
+ });
+}
+
+function ajouterTag(tag) {
+ const tagPropre = tag.trim();
+ if (tagPropre && !tags.includes(tagPropre)) {
+ tags.push(tagPropre);
+ if (!categoriesConnues.includes(tagPropre)) {
+ categoriesConnues.push(tagPropre);
+ }
+ }
+ inputEl.value = "";
+ suggestionsEl.style.display = "none";
+ suggestionsEl.innerHTML = "";
+ render();
+}
+
+function afficherSuggestions() {
+ const valeur = inputEl.value.trim().toLowerCase();
+ suggestionsEl.innerHTML = "";
+ if (valeur === "") {
+ suggestionsEl.style.display = "none";
+ return;
+ }
+ const dispo = categoriesConnues.filter(c => !tags.includes(c));
+ const resultats = dispo.filter(c => c.toLowerCase().includes(valeur));
+ resultats.forEach(c => {
+ const item = document.createElement("div");
+ item.className = "tag-suggestion-item";
+ item.textContent = c;
+ item.addEventListener("click", () => ajouterTag(c));
+ suggestionsEl.appendChild(item);
+ });
+ const existeExactement = categoriesConnues.some(c => c.toLowerCase() === valeur);
+ if (!existeExactement) {
+ const itemCreer = document.createElement("div");
+ itemCreer.className = "tag-suggestion-item tag-suggestion-creer";
+ itemCreer.textContent = `+ Créer "${inputEl.value.trim()}"`;
+ itemCreer.addEventListener("click", () => ajouterTag(inputEl.value));
+ suggestionsEl.appendChild(itemCreer);
+ }
+ suggestionsEl.style.display = "block";
+}
+
+inputEl.addEventListener("input", afficherSuggestions);
+inputEl.addEventListener("focus", afficherSuggestions);
+inputEl.addEventListener("keydown", (e) => {
+ if (e.key === "Enter") {
+ e.preventDefault();
+ if (inputEl.value.trim() !== "") {
+ ajouterTag(inputEl.value);
+ }
+ }
+});
+document.addEventListener("click", (e) => {
+ if (!inputEl.contains(e.target) && !suggestionsEl.contains(e.target)) {
+ suggestionsEl.style.display = "none";
+ }
+});
+
+render();
+
+return {
+ getTags: () => tags,
+ setTags: (nouveauxTags) => { tags = [...(nouveauxTags || [])]; render(); }
+};
+}
+
+const tagPickerAjout = createTagPicker("categorie");
+const tagPickerModif = createTagPicker("modif-categorie");
+
 async function chargerCollection() {
 const container = document.getElementById("collection");
 try {
@@ -14,6 +100,11 @@ try {
  }
  );
  const stylos = await response.json();
+
+ const toutesCategories = new Set();
+ stylos.forEach(s => (s.categorie || []).forEach(c => toutesCategories.add(c)));
+ categoriesConnues = Array.from(toutesCategories).sort();
+
  if (stylos.length === 0) {
  container.innerHTML = "<p>Aucun stylo enregistré pour le moment.</p>";
  return;
@@ -29,7 +120,7 @@ try {
  <img src="${stylo.photo_url || ''}" alt="${stylo.nom || 'Stylo'}">
  <h3>${stylo.nom || 'Sans nom'}</h3>
  <p>${stylo.entreprise || ''}</p>
- <p>${stylo.categorie || ''}</p>
+ <p>${(stylo.categorie || []).join(', ')}</p>
  <span class="badge ${statutClass}">${stylo.statut || ''}</span>
  <button class="btn-modifier">Modifier</button>
  `;
@@ -73,7 +164,7 @@ try {
  const nouveauStylo = {
  nom: document.getElementById("nom").value,
  entreprise: document.getElementById("entreprise").value,
- categorie: document.getElementById("categorie").value,
+ categorie: tagPickerAjout.getTags(),
  rarete_circulation: document.getElementById("rarete_circulation").value,
  rarete_acquisition: document.getElementById("rarete_acquisition").value,
  source: document.getElementById("source").value,
@@ -94,6 +185,7 @@ try {
  if (response.ok) {
  messageEl.textContent = "Stylo ajouté avec succès !";
  document.getElementById("form-stylo").reset();
+ tagPickerAjout.setTags([]);
  chargerCollection();
  } else {
  messageEl.textContent = "Erreur lors de l'ajout.";
@@ -110,7 +202,7 @@ document.getElementById("modif-id").value = stylo.id;
 document.getElementById("modif-photo-actuelle").value = stylo.photo_url || "";
 document.getElementById("modif-nom").value = stylo.nom || "";
 document.getElementById("modif-entreprise").value = stylo.entreprise || "";
-document.getElementById("modif-categorie").value = stylo.categorie || "";
+tagPickerModif.setTags(stylo.categorie || []);
 document.getElementById("modif-rarete_circulation").value = stylo.rarete_circulation || "";
 document.getElementById("modif-rarete_acquisition").value = stylo.rarete_acquisition || "";
 document.getElementById("modif-source").value = stylo.source || "";
@@ -164,7 +256,7 @@ try {
  const styloModifie = {
  nom: document.getElementById("modif-nom").value,
  entreprise: document.getElementById("modif-entreprise").value,
- categorie: document.getElementById("modif-categorie").value,
+ categorie: tagPickerModif.getTags(),
  rarete_circulation: document.getElementById("modif-rarete_circulation").value,
  rarete_acquisition: document.getElementById("modif-rarete_acquisition").value,
  source: document.getElementById("modif-source").value,
