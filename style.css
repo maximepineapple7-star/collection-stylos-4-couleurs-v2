@@ -529,3 +529,20 @@ color: #1a1a2e;
 margin: 24px 0 16px;
 font-size: 20px;
 }
+.tri-bar {
+display: flex;
+align-items: center;
+gap: 8px;
+margin-bottom: 16px;
+font-size: 14px;
+flex-wrap: wrap;
+}
+.tri-bar input[type="text"] {
+flex: 1;
+min-width: 200px;
+padding: 8px 12px;
+border-radius: 6px;
+border: 1px solid #ddd;
+font-family: inherit;
+font-size: 14px;
+}

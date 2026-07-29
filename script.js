@@ -259,11 +259,17 @@ card.querySelector(".btn-modifier").addEventListener("click", (e) => {
 
 function trierEtAfficher() {
 const critere = document.getElementById("tri-select").value;
-const trie = trierStylos(styloArray, critere);
+const recherche = document.getElementById("recherche-nom").value.trim().toLowerCase();
+let resultat = styloArray;
+if (recherche !== "") {
+ resultat = resultat.filter(s => (s.nom || "").toLowerCase().includes(recherche));
+}
+const trie = trierStylos(resultat, critere);
 afficherStylos(trie);
 }
 
 document.getElementById("tri-select").addEventListener("change", trierEtAfficher);
+document.getElementById("recherche-nom").addEventListener("input", trierEtAfficher);
 
 async function chargerCollection() {
 const container = document.getElementById("collection");
@@ -444,6 +450,7 @@ try {
  }
  photoUrl = `${SUPABASE_URL}/storage/v1/object/public/photo-stylos/${nomFichier}`;
  }
+tagPickerModif.commitInput();
  const styloModifie = {
  nom: document.getElementById("modif-nom").value,
  categorie: tagPickerModif.getTags(),
