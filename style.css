@@ -323,3 +323,68 @@ font-size: 14px;
 #detail-vue-contenu p strong {
 color: #1a1a2e;
 }
+.nav-pages {
+margin-top: 12px;
+display: flex;
+justify-content: center;
+gap: 16px;
+}
+.nav-pages a {
+color: white;
+text-decoration: none;
+font-size: 14px;
+padding: 6px 14px;
+border-radius: 6px;
+background-color: rgba(255,255,255,0.1);
+}
+.nav-pages a.active,
+.nav-pages a:hover {
+background-color: rgba(255,255,255,0.25);
+}
+.filtre-bar {
+background: white;
+border-radius: 10px;
+padding: 20px;
+margin-bottom: 24px;
+box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+display: flex;
+flex-wrap: wrap;
+gap: 16px;
+align-items: center;
+}
+.filtre-bar select {
+padding: 8px 12px;
+border-radius: 6px;
+border: 1px solid #ddd;
+font-family: inherit;
+font-size: 14px;
+}
+.filtre-statuts {
+display: flex;
+gap: 8px;
+flex-wrap: wrap;
+}
+.chip-statut {
+padding: 6px 14px;
+border-radius: 16px;
+border: 1px solid #ddd;
+background: white;
+font-size: 13px;
+cursor: pointer;
+transition: all 0.15s ease;
+}
+.chip-statut.actif.possede {
+background-color: #d4edda;
+border-color: #155724;
+color: #155724;
+}
+.chip-statut.actif.negociation {
+background-color: #fff3cd;
+border-color: #856404;
+color: #856404;
+}
+.chip-statut.actif.recherche {
+background-color: #f8d7da;
+border-color: #721c24;
+color: #721c24;
+}
