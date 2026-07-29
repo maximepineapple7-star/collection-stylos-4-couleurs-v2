@@ -3,24 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Collection stylos Bic 4 Couleurs - Catégories</title>
+<title>Collection stylos Bic 4 Couleurs - Carte</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 </head>
 <body>
 <header>
  <h1>Collection stylos Bic 4 Couleurs</h1>
-<nav class="nav-pages">
+ <nav class="nav-pages">
  <a href="accueil.html">Accueil</a>
  <a href="index.html">Stylos</a>
- <a href="categorie.html" class="active">Catégories</a>
- <a href="carte.html">Carte</a>
+ <a href="categorie.html">Catégories</a>
+ <a href="carte.html" class="active">Carte</a>
  </nav>
 </header>
 <main>
  <div class="filtre-bar">
  <div>
- <label for="filtre-type">Type :</label>
- <select id="filtre-type">
+ <label for="filtre-carte-type">Type :</label>
+ <select id="filtre-carte-type">
  <option value="">Tous les types</option>
  <option value="publicitaire">Stylos publicitaires</option>
  <option value="touristique">Stylos touristiques</option>
@@ -30,16 +31,9 @@
  <option value="armée">Armée</option>
  </select>
  </div>
- <div class="filtre-statuts">
- <button type="button" class="chip-statut" data-statut="possédé">Possédé</button>
- <button type="button" class="chip-statut" data-statut="en négociation">En négociation</button>
- <button type="button" class="chip-statut" data-statut="recherché">Recherché</button>
- </div>
  </div>
 
- <div id="collection">
- <p>Chargement de la collection...</p>
- </div>
+ <div id="carte" class="carte-container"></div>
 </main>
 
 <div id="modal-voir-detail" class="modal-overlay" style="display:none;">
@@ -49,6 +43,7 @@
  </div>
 </div>
 
-<script src="categorie.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="carte.js"></script>
 </body>
 </html>
