@@ -81,7 +81,12 @@ render();
 
 return {
  getTags: () => tags,
- setTags: (nouveauxTags) => { tags = [...(nouveauxTags || [])]; render(); }
+ setTags: (nouveauxTags) => { tags = [...(nouveauxTags || [])]; render(); },
+ commitInput: () => {
+ if (inputEl.value.trim() !== "") {
+ ajouterTag(inputEl.value);
+ }
+ }
 };
 }
 
@@ -317,6 +322,7 @@ try {
  }
  photoUrl = `${SUPABASE_URL}/storage/v1/object/public/photo-stylos/${nomFichier}`;
  }
+tagPickerAjout.commitInput();
  const nouveauStylo = {
  nom: document.getElementById("nom").value,
  categorie: tagPickerAjout.getTags(),
