@@ -546,3 +546,16 @@ border: 1px solid #ddd;
 font-family: inherit;
 font-size: 14px;
 }
+.btn-export {
+background-color: #1a1a2e;
+color: white;
+border: none;
+padding: 8px 16px;
+border-radius: 6px;
+font-size: 13px;
+cursor: pointer;
+white-space: nowrap;
+}
+.btn-export:hover {
+background-color: #2c2c54;
+}

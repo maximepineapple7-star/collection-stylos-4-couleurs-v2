@@ -509,6 +509,46 @@ try {
  });
  if (response.ok) {
  messageEl.textContent = "Stylo supprimé !";
+ function csvEchapper(valeur) {
+if (valeur === null || valeur === undefined) return "";
+const texte = String(valeur).replace(/"/g, '""');
+return `"${texte}"`;
+}
+
+function exporterCSV() {
+const entetes = ["Nom", "Catégorie", "Rareté de circulation", "Source", "Année d'acquisition", "Statut", "Ville", "Lieu", "Latitude", "Longitude", "Notes"];
+const lignes = [entetes.map(csvEchapper).join(",")];
+
+styloArray.forEach(stylo => {
+ const ligne = [
+ stylo.nom || "",
+ (stylo.categorie || []).join("; "),
+ stylo.rarete_circulation || "",
+ stylo.source || "",
+ stylo.date_acquisition || "",
+ stylo.statut || "",
+ stylo.lieu_ville || "",
+ stylo.lieu_nom || "",
+ stylo.lieu_lat ?? "",
+ stylo.lieu_lng ?? "",
+ stylo.notes || ""
+ ];
+ lignes.push(ligne.map(csvEchapper).join(","));
+});
+
+const contenuCSV = "\uFEFF" + lignes.join("\r\n");
+const blob = new Blob([contenuCSV], { type: "text/csv;charset=utf-8;" });
+const url = URL.createObjectURL(blob);
+const lien = document.createElement("a");
+lien.href = url;
+lien.download = `collection-stylos-${new Date().toISOString().slice(0, 10)}.csv`;
+document.body.appendChild(lien);
+lien.click();
+document.body.removeChild(lien);
+URL.revokeObjectURL(url);
+}
+
+document.getElementById("btn-export-csv").addEventListener("click", exporterCSV);
  chargerCollection();
  setTimeout(fermerModal, 500);
  } else {
