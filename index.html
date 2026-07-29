@@ -15,7 +15,6 @@
  <h2>Ajouter un stylo</h2>
  <form id="form-stylo">
  <input type="text" id="nom" placeholder="Nom du stylo" required>
- <input type="text" id="entreprise" placeholder="Entreprise / institution">
  <div class="tag-picker" id="categorie-picker">
  <div class="tags-selectionnees" id="categorie-tags"></div>
  <input type="text" id="categorie-input" placeholder="Ajouter une catégorie...">
@@ -95,9 +94,6 @@
  <label>Nom
  <input type="text" id="modif-nom" required>
  </label>
- <label>Entreprise / institution
- <input type="text" id="modif-entreprise">
- </label>
  <label>Catégorie
  <div class="tag-picker" id="modif-categorie-picker">
  <div class="tags-selectionnees" id="modif-categorie-tags"></div>
@@ -143,8 +139,8 @@
  </select>
  <input type="text" id="modif-source-nouveau" placeholder="Nom de la nouvelle source" style="display:none; margin-top: 6px;">
  </label>
- <label>Date d'acquisition
- <input type="date" id="modif-date_acquisition">
+  <label>Année d'acquisition
+ <input type="number" id="modif-date_acquisition" min="1950" max="2100">
  </label>
  <label>Statut
  <select id="modif-statut">

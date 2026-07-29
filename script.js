@@ -209,7 +209,6 @@ stylos.forEach(stylo => {
  card.innerHTML = `
  <img src="${stylo.photo_url || ''}" alt="${stylo.nom || 'Stylo'}">
  <h3>${stylo.nom || 'Sans nom'}</h3>
- <p>${stylo.entreprise || ''}</p>
  <p>${(stylo.categorie || []).join(', ')}</p>
  <span class="badge ${statutClass}">${stylo.statut || ''}</span>
  <button class="btn-modifier">Modifier</button>
@@ -287,7 +286,6 @@ try {
  }
  const nouveauStylo = {
  nom: document.getElementById("nom").value,
- entreprise: document.getElementById("entreprise").value,
  categorie: tagPickerAjout.getTags(),
  rarete_circulation: document.getElementById("rarete_circulation").value,
  rarete_acquisition: document.getElementById("rarete_acquisition").value,
@@ -330,7 +328,6 @@ const contenu = document.getElementById("detail-vue-contenu");
 contenu.innerHTML = `
  ${stylo.photo_url ? `<img src="${stylo.photo_url}" alt="${stylo.nom || ''}">` : ''}
  <h2>${stylo.nom || 'Sans nom'}</h2>
- <p><strong>Entreprise / institution :</strong> ${stylo.entreprise || '-'}</p>
  <p><strong>Catégorie :</strong> ${(stylo.categorie || []).join(', ') || '-'}</p>
  <p><strong>Rareté de circulation :</strong> ${stylo.rarete_circulation || '-'}</p>
  <p><strong>Rareté d'acquisition :</strong> ${stylo.rarete_acquisition || '-'}</p>
@@ -357,7 +354,6 @@ function ouvrirModal(stylo) {
 document.getElementById("modif-id").value = stylo.id;
 document.getElementById("modif-photo-actuelle").value = stylo.photo_url || "";
 document.getElementById("modif-nom").value = stylo.nom || "";
-document.getElementById("modif-entreprise").value = stylo.entreprise || "";
 tagPickerModif.setTags(stylo.categorie || []);
 document.getElementById("modif-rarete_circulation").value = stylo.rarete_circulation || "";
 document.getElementById("modif-rarete_acquisition").value = stylo.rarete_acquisition || "";
@@ -415,7 +411,6 @@ try {
  }
  const styloModifie = {
  nom: document.getElementById("modif-nom").value,
- entreprise: document.getElementById("modif-entreprise").value,
  categorie: tagPickerModif.getTags(),
  rarete_circulation: document.getElementById("modif-rarete_circulation").value,
  rarete_acquisition: document.getElementById("modif-rarete_acquisition").value,
