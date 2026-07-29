@@ -241,6 +241,7 @@ stylos.forEach(stylo => {
  : stylo.statut === "en négociation" ? "negociation"
  : "recherche";
  card.innerHTML = `
+ <button class="btn-favori ${stylo.favori ? 'favori-actif' : ''}" title="Coup de cœur">★</button>
  <img src="${stylo.photo_url || ''}" alt="${stylo.nom || 'Stylo'}">
  <h3>${stylo.nom || 'Sans nom'}</h3>
  <p>${(stylo.categorie || []).join(', ')}</p>
@@ -252,6 +253,7 @@ card.querySelector(".btn-modifier").addEventListener("click", (e) => {
  e.stopPropagation();
  ouvrirModal(stylo);
  });
+ card.querySelector(".btn-favori").addEventListener("click", (e) => toggleFavori(stylo, e));
  card.addEventListener("click", () => ouvrirDetailVue(stylo));
  container.appendChild(card);
 });
@@ -260,16 +262,27 @@ card.querySelector(".btn-modifier").addEventListener("click", (e) => {
 function trierEtAfficher() {
 const critere = document.getElementById("tri-select").value;
 const recherche = document.getElementById("recherche-nom").value.trim().toLowerCase();
+const favoriUniquement = document.getElementById("filtre-favori").checked;
 let resultat = styloArray;
 if (recherche !== "") {
  resultat = resultat.filter(s => (s.nom || "").toLowerCase().includes(recherche));
+}
+if (favoriUniquement) {
+ resultat = resultat.filter(s => s.favori);
 }
 const trie = trierStylos(resultat, critere);
 afficherStylos(trie);
 }
 
+if (response.ok) {
+ messageEl.textContent = "Stylo supprimé !";
+ chargerCollection();
+ setTimeout(fermerModal, 500);
+ } else {
+
 document.getElementById("tri-select").addEventListener("change", trierEtAfficher);
 document.getElementById("recherche-nom").addEventListener("input", trierEtAfficher);
+document.getElementById("filtre-favori").addEventListener("change", trierEtAfficher);
 
 async function chargerCollection() {
 const container = document.getElementById("collection");
@@ -335,7 +348,8 @@ tagPickerAjout.commitInput();
 rarete_circulation: document.getElementById("rarete_circulation").value,
  source: getSourceValue("source", "source-nouveau"),
  date_acquisition: document.getElementById("date_acquisition").value || null,
- statut: document.getElementById("statut").value,
+statut: document.getElementById("statut").value,
+ prix: document.getElementById("prix").value ? parseFloat(document.getElementById("prix").value) : null,
  lieu_ville: document.getElementById("lieu_ville").value,
  lieu_nom: document.getElementById("lieu_nom").value,
  lieu_lat: parserCoordonneesGPS(document.getElementById("lieu_gps").value).lat,
@@ -376,7 +390,8 @@ contenu.innerHTML = `
  <p><strong>Rareté de circulation :</strong> ${stylo.rarete_circulation || '-'}</p>
  <p><strong>Source :</strong> ${stylo.source || '-'}</p>
  <p><strong>Date d'acquisition :</strong> ${stylo.date_acquisition || '-'}</p>
- <p><strong>Statut :</strong> ${stylo.statut || '-'}</p>
+<p><strong>Statut :</strong> ${stylo.statut || '-'}</p>
+ <p><strong>Prix payé :</strong> ${stylo.prix ? parseFloat(stylo.prix).toFixed(2) + ' €' : '-'}</p>
  <p><strong>Ville :</strong> ${stylo.lieu_ville || '-'}</p>
  <p><strong>Lieu :</strong> ${stylo.lieu_nom || '-'}</p>
  <p><strong>Notes :</strong> ${stylo.notes || '-'}</p>
@@ -402,6 +417,7 @@ document.getElementById("modif-rarete_circulation").value = stylo.rarete_circula
 setSourceValue("modif-source", "modif-source-nouveau", stylo.source || "");
 document.getElementById("modif-date_acquisition").value = stylo.date_acquisition || "";
 document.getElementById("modif-statut").value = stylo.statut || "possédé";
+document.getElementById("modif-prix").value = stylo.prix ?? "";
 document.getElementById("modif-lieu_ville").value = stylo.lieu_ville || "";
 document.getElementById("modif-lieu_nom").value = stylo.lieu_nom || "";
 document.getElementById("modif-lieu_gps").value = formaterCoordonneesGPS(stylo.lieu_lat, stylo.lieu_lng);
@@ -457,7 +473,8 @@ tagPickerModif.commitInput();
 rarete_circulation: document.getElementById("modif-rarete_circulation").value,
  source: getSourceValue("modif-source", "modif-source-nouveau"),
  date_acquisition: document.getElementById("modif-date_acquisition").value || null,
- statut: document.getElementById("modif-statut").value,
+statut: document.getElementById("modif-statut").value,
+ prix: document.getElementById("modif-prix").value ? parseFloat(document.getElementById("modif-prix").value) : null,
  lieu_ville: document.getElementById("modif-lieu_ville").value,
  lieu_nom: document.getElementById("modif-lieu_nom").value,
 lieu_lat: parserCoordonneesGPS(document.getElementById("modif-lieu_gps").value).lat,
@@ -509,6 +526,27 @@ try {
  });
  if (response.ok) {
  messageEl.textContent = "Stylo supprimé !";
+ async function toggleFavori(stylo, event) {
+event.stopPropagation();
+const nouveauFavori = !stylo.favori;
+try {
+ const response = await fetch(`${SUPABASE_URL}/rest/v1/stylos?id=eq.${stylo.id}`, {
+ method: "PATCH",
+ headers: {
+ "apikey": SUPABASE_KEY,
+ "Authorization": `Bearer ${SUPABASE_KEY}`,
+ "Content-Type": "application/json",
+ "Prefer": "return=minimal"
+ },
+ body: JSON.stringify({ favori: nouveauFavori })
+ });
+ if (response.ok) {
+ chargerCollection();
+ }
+} catch (error) {
+ console.error(error);
+}
+}
  chargerCollection();
  setTimeout(fermerModal, 500);
  } else {

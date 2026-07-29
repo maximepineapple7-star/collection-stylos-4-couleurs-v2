@@ -70,6 +70,62 @@ afficherMarqueurs(resultat);
 
 document.getElementById("filtre-carte-type").addEventListener("change", appliquerFiltreCarte);
 
+function distanceKm(lat1, lng1, lat2, lng2) {
+const R = 6371;
+const dLat = (lat2 - lat1) * Math.PI / 180;
+const dLng = (lng2 - lng1) * Math.PI / 180;
+const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+ Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
+ Math.sin(dLng/2) * Math.sin(dLng/2);
+const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+return R * c;
+}
+
+async function rechercherVille() {
+const requete = document.getElementById("recherche-ville").value.trim();
+if (requete === "") {
+ afficherMarqueurs(styloArray);
+ carte.setView([46.6, 2.5], 5.5);
+ return;
+}
+try {
+ const reponse = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(requete)}&limit=1`);
+ const resultats = await reponse.json();
+ if (resultats.length === 0) {
+ alert("Ville introuvable.");
+ return;
+ }
+ const villeLat = parseFloat(resultats[0].lat);
+ const villeLng = parseFloat(resultats[0].lon);
+
+ const stylosCorrespondants = styloArray.filter(s => {
+ if (s.lieu_ville && s.lieu_ville.toLowerCase().includes(requete.toLowerCase())) {
+ return true;
+ }
+ if (s.lieu_lat && s.lieu_lng) {
+ return distanceKm(villeLat, villeLng, s.lieu_lat, s.lieu_lng) <= 40;
+ }
+ return false;
+ });
+
+ afficherMarqueurs(stylosCorrespondants);
+ if (stylosCorrespondants.length === 0) {
+ carte.setView([villeLat, villeLng], 11);
+ }
+} catch (error) {
+ console.error(error);
+ alert("Erreur lors de la recherche de la ville.");
+}
+}
+
+document.getElementById("btn-recherche-ville").addEventListener("click", rechercherVille);
+document.getElementById("recherche-ville").addEventListener("keydown", (e) => {
+if (e.key === "Enter") {
+ e.preventDefault();
+ rechercherVille();
+}
+});
+
 function ouvrirDetailVue(stylo) {
 const contenu = document.getElementById("detail-vue-contenu");
 contenu.innerHTML = `
@@ -77,7 +133,6 @@ contenu.innerHTML = `
  <h2>${stylo.nom || 'Sans nom'}</h2>
  <p><strong>Catégorie :</strong> ${(stylo.categorie || []).join(', ') || '-'}</p>
  <p><strong>Rareté de circulation :</strong> ${stylo.rarete_circulation || '-'}</p>
- <p><strong>Rareté d'acquisition :</strong> ${stylo.rarete_acquisition || '-'}</p>
  <p><strong>Source :</strong> ${stylo.source || '-'}</p>
  <p><strong>Année d'acquisition :</strong> ${stylo.date_acquisition || '-'}</p>
  <p><strong>Statut :</strong> ${stylo.statut || '-'}</p>

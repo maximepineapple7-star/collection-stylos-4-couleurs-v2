@@ -54,6 +54,7 @@
  <option value="en négociation">En négociation</option>
  <option value="recherché">Recherché</option>
  </select>
+ <input type="number" step="0.01" id="prix" placeholder="Prix payé (€)">
  <input type="text" id="lieu_ville" placeholder="Ville">
  <input type="text" id="lieu_nom" placeholder="Nom du lieu (monument, boutique...)">
  <input type="text" id="lieu_gps" placeholder="Coordonnées GPS (ex: 43.2062692557662, 2.3641639104896064)">
@@ -64,8 +65,9 @@
  <p id="message-form"></p>
  </section>
 
- <div class="tri-bar">
+<div class="tri-bar">
  <input type="text" id="recherche-nom" placeholder="Rechercher un stylo par nom...">
+ <label class="checkbox-favori"><input type="checkbox" id="filtre-favori"> Coups de cœur uniquement</label>
  <label for="tri-select">Trier par :</label>
  <select id="tri-select">
  <option value="alphabetique">Ordre alphabétique</option>
@@ -130,6 +132,9 @@
  <option value="en négociation">En négociation</option>
  <option value="recherché">Recherché</option>
  </select>
+ </label>
+ <label>Prix payé (€)
+ <input type="number" step="0.01" id="modif-prix">
  </label>
  <label>Ville
  <input type="text" id="modif-lieu_ville">
