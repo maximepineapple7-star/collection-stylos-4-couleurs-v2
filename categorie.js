@@ -58,7 +58,8 @@ stylos.forEach(stylo => {
  <img src="${stylo.photo_url || ''}" alt="${stylo.nom || 'Stylo'}">
  <h3>${stylo.nom || 'Sans nom'}</h3>
  <p>${(stylo.categorie || []).join(', ')}</p>
- <span class="badge ${statutClass}">${stylo.statut || ''}</span>
+<span class="badge ${statutClass}">${stylo.statut || ''}</span>
+ ${stylo.rarete_circulation ? `<span class="badge-rarete ${classeRarete(stylo.rarete_circulation)}">${stylo.rarete_circulation}</span>` : ''}
  `;
  card.addEventListener("click", () => ouvrirDetailVue(stylo));
  container.appendChild(card);
@@ -72,7 +73,6 @@ contenu.innerHTML = `
  <h2>${stylo.nom || 'Sans nom'}</h2>
  <p><strong>Catégorie :</strong> ${(stylo.categorie || []).join(', ') || '-'}</p>
  <p><strong>Rareté de circulation :</strong> ${stylo.rarete_circulation || '-'}</p>
- <p><strong>Rareté d'acquisition :</strong> ${stylo.rarete_acquisition || '-'}</p>
  <p><strong>Source :</strong> ${stylo.source || '-'}</p>
  <p><strong>Année d'acquisition :</strong> ${stylo.date_acquisition || '-'}</p>
  <p><strong>Statut :</strong> ${stylo.statut || '-'}</p>
@@ -109,5 +109,14 @@ btn.addEventListener("click", () => {
  appliquerFiltres();
 });
 });
-
+function classeRarete(valeur) {
+const correspondance = {
+ "Commun": "rarete-commun",
+ "Peu commun": "rarete-peu-commun",
+ "Rare": "rarete-rare",
+ "Très rare": "rarete-tres-rare",
+ "Exceptionnel": "rarete-exceptionnel"
+};
+return correspondance[valeur] || "";
+}
 chargerCollection();

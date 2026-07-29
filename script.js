@@ -139,19 +139,32 @@ circulation: {
  <tr><td>Très rare</td><td>50 - 300</td></tr>
  <tr><td>Exceptionnel</td><td>&le; 50</td></tr>
  </table>`
-},
-acquisition: {
- titre: "Échelle de rareté d'acquisition",
- html: `<table>
- <tr><th>Statut</th><th>Fréquence sur le marché</th><th>Difficulté</th></tr>
- <tr><td>Commun</td><td>Plusieurs fois/semaine</td><td>Très facile</td></tr>
- <tr><td>Peu commun</td><td>Plusieurs fois/mois</td><td>Facile, un peu de veille</td></tr>
- <tr><td>Rare</td><td>Quelques fois/trimestre</td><td>Recherche régulière, concurrence modérée</td></tr>
- <tr><td>Très rare</td><td>1 à quelques fois/an</td><td>Recherche longue, réseau spécialisé</td></tr>
- <tr><td>Exceptionnel</td><td>Tous les 2-3 ans ou moins</td><td>Accès très difficile, cercle restreint</td></tr>
- </table>`
 }
 };
+
+function classeRarete(valeur) {
+const correspondance = {
+ "Commun": "rarete-commun",
+ "Peu commun": "rarete-peu-commun",
+ "Rare": "rarete-rare",
+ "Très rare": "rarete-tres-rare",
+ "Exceptionnel": "rarete-exceptionnel"
+};
+return correspondance[valeur] || "";
+}
+
+function parserCoordonneesGPS(valeur) {
+const parties = (valeur || "").split(',').map(p => p.trim());
+if (parties.length === 2 && parties[0] !== "" && parties[1] !== "" && !isNaN(parseFloat(parties[0])) && !isNaN(parseFloat(parties[1]))) {
+ return { lat: parseFloat(parties[0]), lng: parseFloat(parties[1]) };
+}
+return { lat: null, lng: null };
+}
+
+function formaterCoordonneesGPS(lat, lng) {
+if (lat === null || lat === undefined || lng === null || lng === undefined) return "";
+return `${lat}, ${lng}`;
+}
 
 function ouvrirModalRarete(type) {
 document.getElementById("rarete-info-titre").textContent = infosRarete[type].titre;
@@ -180,19 +193,13 @@ return echelle[txt] || 0;
 
 function trierStylos(stylos, critere) {
 const copie = [...stylos];
-if (critere === "acquisition") {
- copie.sort((a, b) => valeurRarete(b.rarete_acquisition) - valeurRarete(a.rarete_acquisition));
-} else if (critere === "circulation") {
+if (critere === "circulation") {
  copie.sort((a, b) => valeurRarete(b.rarete_circulation) - valeurRarete(a.rarete_circulation));
-} else if (critere === "moyenne") {
- const moyenne = (s) => (valeurRarete(s.rarete_acquisition) + valeurRarete(s.rarete_circulation)) / 2;
- copie.sort((a, b) => moyenne(b) - moyenne(a));
 } else {
  copie.sort((a, b) => (a.nom || "").localeCompare(b.nom || ""));
 }
 return copie;
 }
-
 function afficherStylos(stylos) {
 const container = document.getElementById("collection");
 if (stylos.length === 0) {
@@ -211,6 +218,7 @@ stylos.forEach(stylo => {
  <h3>${stylo.nom || 'Sans nom'}</h3>
  <p>${(stylo.categorie || []).join(', ')}</p>
  <span class="badge ${statutClass}">${stylo.statut || ''}</span>
+ ${stylo.rarete_circulation ? `<span class="badge-rarete ${classeRarete(stylo.rarete_circulation)}">${stylo.rarete_circulation}</span>` : ''}
  <button class="btn-modifier">Modifier</button>
  `;
 card.querySelector(".btn-modifier").addEventListener("click", (e) => {
@@ -287,15 +295,14 @@ try {
  const nouveauStylo = {
  nom: document.getElementById("nom").value,
  categorie: tagPickerAjout.getTags(),
- rarete_circulation: document.getElementById("rarete_circulation").value,
- rarete_acquisition: document.getElementById("rarete_acquisition").value,
+rarete_circulation: document.getElementById("rarete_circulation").value,
  source: getSourceValue("source", "source-nouveau"),
  date_acquisition: document.getElementById("date_acquisition").value || null,
  statut: document.getElementById("statut").value,
  lieu_ville: document.getElementById("lieu_ville").value,
  lieu_nom: document.getElementById("lieu_nom").value,
- lieu_lat: document.getElementById("lieu_lat").value ? parseFloat(document.getElementById("lieu_lat").value) : null,
- lieu_lng: document.getElementById("lieu_lng").value ? parseFloat(document.getElementById("lieu_lng").value) : null,
+ lieu_lat: parserCoordonneesGPS(document.getElementById("lieu_gps").value).lat,
+ lieu_lng: parserCoordonneesGPS(document.getElementById("lieu_gps").value).lng,
  photo_url: photoUrl,
  notes: document.getElementById("notes").value
  };
@@ -330,7 +337,6 @@ contenu.innerHTML = `
  <h2>${stylo.nom || 'Sans nom'}</h2>
  <p><strong>Catégorie :</strong> ${(stylo.categorie || []).join(', ') || '-'}</p>
  <p><strong>Rareté de circulation :</strong> ${stylo.rarete_circulation || '-'}</p>
- <p><strong>Rareté d'acquisition :</strong> ${stylo.rarete_acquisition || '-'}</p>
  <p><strong>Source :</strong> ${stylo.source || '-'}</p>
  <p><strong>Date d'acquisition :</strong> ${stylo.date_acquisition || '-'}</p>
  <p><strong>Statut :</strong> ${stylo.statut || '-'}</p>
@@ -356,14 +362,12 @@ document.getElementById("modif-photo-actuelle").value = stylo.photo_url || "";
 document.getElementById("modif-nom").value = stylo.nom || "";
 tagPickerModif.setTags(stylo.categorie || []);
 document.getElementById("modif-rarete_circulation").value = stylo.rarete_circulation || "";
-document.getElementById("modif-rarete_acquisition").value = stylo.rarete_acquisition || "";
 setSourceValue("modif-source", "modif-source-nouveau", stylo.source || "");
 document.getElementById("modif-date_acquisition").value = stylo.date_acquisition || "";
 document.getElementById("modif-statut").value = stylo.statut || "possédé";
 document.getElementById("modif-lieu_ville").value = stylo.lieu_ville || "";
 document.getElementById("modif-lieu_nom").value = stylo.lieu_nom || "";
-document.getElementById("modif-lieu_lat").value = stylo.lieu_lat ?? "";
-document.getElementById("modif-lieu_lng").value = stylo.lieu_lng ?? "";
+document.getElementById("modif-lieu_gps").value = formaterCoordonneesGPS(stylo.lieu_lat, stylo.lieu_lng);
 document.getElementById("modif-photo").value = "";
 document.getElementById("modif-notes").value = stylo.notes || "";
 document.getElementById("message-modif").textContent = "";
@@ -412,15 +416,14 @@ try {
  const styloModifie = {
  nom: document.getElementById("modif-nom").value,
  categorie: tagPickerModif.getTags(),
- rarete_circulation: document.getElementById("modif-rarete_circulation").value,
- rarete_acquisition: document.getElementById("modif-rarete_acquisition").value,
+rarete_circulation: document.getElementById("modif-rarete_circulation").value,
  source: getSourceValue("modif-source", "modif-source-nouveau"),
  date_acquisition: document.getElementById("modif-date_acquisition").value || null,
  statut: document.getElementById("modif-statut").value,
  lieu_ville: document.getElementById("modif-lieu_ville").value,
  lieu_nom: document.getElementById("modif-lieu_nom").value,
- lieu_lat: document.getElementById("modif-lieu_lat").value ? parseFloat(document.getElementById("modif-lieu_lat").value) : null,
- lieu_lng: document.getElementById("modif-lieu_lng").value ? parseFloat(document.getElementById("modif-lieu_lng").value) : null,
+lieu_lat: parserCoordonneesGPS(document.getElementById("modif-lieu_gps").value).lat,
+ lieu_lng: parserCoordonneesGPS(document.getElementById("modif-lieu_gps").value).lng,
  photo_url: photoUrl,
  notes: document.getElementById("modif-notes").value
  };

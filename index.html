@@ -27,17 +27,6 @@
  <div class="tag-suggestions" id="categorie-suggestions"></div>
  </div>
  <div class="rarete-field">
- <select id="rarete_circulation">
- <option value="">Rareté de circulation</option>
- <option value="Commun">Commun</option>
- <option value="Peu commun">Peu commun</option>
- <option value="Rare">Rare</option>
- <option value="Très rare">Très rare</option>
- <option value="Exceptionnel">Exceptionnel</option>
- </select>
- <button type="button" class="btn-astero" data-type="circulation">?</button>
- </div>
- <div class="rarete-field">
  <select id="rarete_acquisition">
  <option value="">Rareté d'acquisition</option>
  <option value="Commun">Commun</option>
@@ -66,8 +55,7 @@
  </select>
  <input type="text" id="lieu_ville" placeholder="Ville">
  <input type="text" id="lieu_nom" placeholder="Nom du lieu (monument, boutique...)">
- <input type="number" step="any" id="lieu_lat" placeholder="Latitude GPS">
- <input type="number" step="any" id="lieu_lng" placeholder="Longitude GPS">
+ <input type="text" id="lieu_gps" placeholder="Coordonnées GPS (ex: 43.2062692557662, 2.3641639104896064)">
  <input type="file" id="photo" accept="image/*">
  <textarea id="notes" placeholder="Notes"></textarea>
  <button type="submit">Ajouter le stylo</button>
@@ -79,9 +67,7 @@
  <label for="tri-select">Trier par :</label>
  <select id="tri-select">
  <option value="alphabetique">Ordre alphabétique</option>
- <option value="acquisition">Rareté d'acquisition</option>
  <option value="circulation">Rareté de circulation</option>
- <option value="moyenne">Rareté moyenne</option>
  </select>
  </div>
 
@@ -120,19 +106,6 @@
  <button type="button" class="btn-astero" data-type="circulation">?</button>
  </div>
  </label>
- <label>Rareté d'acquisition
- <div class="rarete-field">
- <select id="modif-rarete_acquisition">
- <option value="">Choisir</option>
- <option value="Commun">Commun</option>
- <option value="Peu commun">Peu commun</option>
- <option value="Rare">Rare</option>
- <option value="Très rare">Très rare</option>
- <option value="Exceptionnel">Exceptionnel</option>
- </select>
- <button type="button" class="btn-astero" data-type="acquisition">?</button>
- </div>
- </label>
  <label>Source
  <select id="modif-source">
  <option value="">Choisir une source</option>
@@ -161,11 +134,8 @@
  <label>Nom du lieu (monument, boutique...)
  <input type="text" id="modif-lieu_nom">
  </label>
- <label>Latitude GPS
- <input type="number" step="any" id="modif-lieu_lat">
- </label>
- <label>Longitude GPS
- <input type="number" step="any" id="modif-lieu_lng">
+<label>Coordonnées GPS (ex: 43.2062692557662, 2.3641639104896064)
+ <input type="text" id="modif-lieu_gps">
  </label>
  <label>Photo (laisser vide pour garder la photo actuelle)
  <input type="file" id="modif-photo" accept="image/*">
